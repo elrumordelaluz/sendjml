@@ -1,0 +1,8 @@
+<mj-head>
+  <mj-style inline="inline">
+    .link-nostyle {
+      color: inherit;
+      text-decoration: none
+    }
+  </mj-style>
+</mj-head>
