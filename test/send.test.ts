@@ -1,4 +1,9 @@
-import { config, send } from '../src'
+import {
+  config,
+  send,
+  // designEmail
+} from '../src'
+// import { promises as fs } from 'fs'
 
 describe('send', () => {
   it('works', async done => {
@@ -15,13 +20,16 @@ describe('send', () => {
       params: { message: 'Lorem ipsum' },
     })
 
-    await send({
-      from: 'lionel@tzatzk.in',
-      to: 'elrumordelaluz@me.com',
-      subject: 'This is another email',
-      text: 'another email',
-      params: { message: 'another email' },
-    })
+    // const html = await designEmail({ design: 'seed' })
+    // await fs.writeFile('seed_new.html', html)
+
+    // await send({
+    //   from: 'lionel@tzatzk.in',
+    //   to: 'elrumordelaluz@me.com',
+    //   subject: 'This is another email',
+    //   text: 'another email',
+    //   params: { message: 'another email' },
+    // })
 
     expect(true).toBe(true)
 
