@@ -1,0 +1,45 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Nunito" href="https://fonts.googleapis.com/css?family=Nunito:Light|Nunito:Regular|Nunito:Bold|Nunito:Black" />
+    <mj-style inline="inline">
+      .link-nostyle {
+        color: inherit;
+        text-decoration: none
+      }
+    </mj-style>
+  </mj-head>
+  <mj-body>
+    <mj-section background-color="#fff" padding="10px">
+      <mj-column >
+        <mj-text line-height="1.5">{{message}}</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#ffffff" padding="10px">
+      <mj-column width="30%">
+        <mj-text padding="0 0 0 20px" font-family="Nunito, Arial">
+          <p style="font-size:15px;">
+            Brice Nadal
+          </p>
+          <p style="margin-top:-.6em; font-weight:300">
+            Seed Executive Officer
+          </p>
+        </mj-text>
+      </mj-column>
+      <mj-column width="70%">
+        <mj-text padding="0">
+          <p style="font-weight:900"> 
+            +33 (0) 6 81 25 44 09
+          </p>
+          <p style="margin-top:-.54em; font-weight:300" >
+            <a class="link-nostyle" href="mailto:brice@seedcantine.fr">brice@seedcantine.fr</a>
+          </p>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#8ac5a5" border-top="6px solid #1f3b32" padding="10px">
+      <mj-column >
+        <mj-image href="https://seed-la-smart-cantine.fr/" align="left" width="100px" src="https://www.pixeden.com/tmp/seed_logo.png" />
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -29,6 +29,31 @@ type optionsType = {
   templates?: string
 }
 
+export const designEmail = async ({
+  templates,
+  design,
+  params,
+}: designType): Promise<string> => {
+  let templatesDir = templates || globalTemplates
+
+  if (templatesDir) {
+    const designBase = await fs.readFile(
+      resolve(templatesDir, `${design ?? 'base'}.mjml`),
+      'utf8'
+    )
+    const template = compile(designBase)
+    const mjml = template(params)
+    const htmlOutput = mjml2html(mjml, {
+      filePath: join(templatesDir),
+    })
+
+    return htmlOutput.html
+  }
+  return ''
+}
+
+// export const getHtml = async ({templates, design, params} :getHtmlType):Boolean => ()
+
 export const send = async ({
   templates,
   design,
@@ -37,21 +62,8 @@ export const send = async ({
 }: sendType): Promise<any> => {
   try {
     let html = mailData.html || ''
-    let templatesDir = templates || globalTemplates
 
-    if (templatesDir) {
-      const designBase = await fs.readFile(
-        resolve(templatesDir, `${design ?? 'base'}.mjml`),
-        'utf8'
-      )
-      const template = compile(designBase)
-      const mjml = template(params)
-      const htmlOutput = mjml2html(mjml, {
-        filePath: join(templatesDir),
-      })
-
-      html = htmlOutput.html
-    }
+    html = await designEmail({ templates, design, params })
 
     const { from, ...restMailData } = mailData
     const sender = from || globalFrom
@@ -74,6 +86,12 @@ export const send = async ({
 type sendType = Omit<MailDataRequired, 'from'> & {
   from?: fromType
   text?: string
+  design?: string
+  templates?: string
+  params?: any
+}
+
+type designType = {
   design?: string
   templates?: string
   params?: any
