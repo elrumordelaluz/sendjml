@@ -7,8 +7,9 @@ import { MailDataRequired } from '@sendgrid/helpers/classes/mail'
 
 let globalTemplates: string | null = null
 let globalFrom: fromType | null = null
+let globalParams: {} | null = null
 
-export const config = ({ apiKey, from, templates }: optionsType) => {
+export const config = ({ apiKey, from, templates, params }: optionsType) => {
   if (apiKey) {
     sgMail.setApiKey(apiKey)
 
@@ -17,6 +18,9 @@ export const config = ({ apiKey, from, templates }: optionsType) => {
     }
     if (templates) {
       globalTemplates = templates
+    }
+    if (params) {
+      globalParams = params
     }
   } else {
     throw new Error('SendGrid api key missing')
@@ -27,6 +31,7 @@ type optionsType = {
   apiKey?: string
   from?: fromType
   templates?: string
+  params?: {}
 }
 
 export const designEmail = async ({
@@ -35,6 +40,10 @@ export const designEmail = async ({
   params,
 }: designType): Promise<string> => {
   let templatesDir = templates || globalTemplates
+  let templateParams =
+    typeof params === 'function'
+      ? params(globalParams)
+      : { ...globalParams, ...params }
 
   if (templatesDir) {
     const designBase = await fs.readFile(
@@ -42,7 +51,7 @@ export const designEmail = async ({
       'utf8'
     )
     const template = compile(designBase)
-    const mjml = template(params)
+    const mjml = template(templateParams)
     const htmlOutput = mjml2html(mjml, {
       filePath: join(templatesDir),
     })

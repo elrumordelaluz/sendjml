@@ -11,13 +11,19 @@ describe('send', () => {
       apiKey: process.env.SG_API_KEY,
       from: 'contact@lionel.com',
       templates: `${__dirname}/design`,
+      params: {
+        hello: 'Hello, ',
+        world: 'Word!',
+      },
     })
 
     await send({
       to: 'elrumordelaluz@me.com',
       subject: 'This is a Lorem Ipsum email',
       text: 'Lorem ipsum',
-      params: { message: 'Lorem ipsum' },
+      params({ hello, world }: any) {
+        return { message: `Lorem ipsum. ${hello}${world}` }
+      },
     })
 
     // const html = await designEmail({ design: 'seed' })
