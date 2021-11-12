@@ -1,0 +1,9 @@
+<mj-section background-color="#f5f6f9">
+  <mj-column width="600px">
+    <mj-image
+      width="50px"
+      src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+      href="https://www.google.com/"
+    />
+  </mj-column>
+</mj-section>

@@ -1,0 +1,21 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Lionel Tzatzkin <elrumordelaluz@hotmail.com> (https://elrumordelaluz.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "parcel": "2.0.1"
+  },
+  "dependencies": {
+    "dotenv": "10.0.0",
+    "sendjml": "0.6.0"
+  },
+  "scripts": {
+    "start": "parcel src/index.js",
+    "build": "parcel build src/index.js"
+  },
+  "engines": {
+    "node": "14"
+  }
+}

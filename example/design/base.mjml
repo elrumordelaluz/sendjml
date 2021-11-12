@@ -1,0 +1,12 @@
+<mjml>
+  <mj-include path="head.mjml" />
+  <mj-body>
+    <mj-include path="header.mjml" />
+    <mj-section background-color="#fff">
+      <mj-column>
+        <mj-text>{{message}}</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-include path="footer.mjml" />
+  </mj-body>
+</mjml>

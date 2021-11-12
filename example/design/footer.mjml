@@ -1,0 +1,9 @@
+<mj-section background-color="#f5f6f9">
+  <mj-column>
+    <mj-text font-size="12px" color="#828282" align="center"
+      >This e-mail was sent by
+      <a href="https://www.google.com" class="link-nostyle">Google.com</a>,
+      USA</mj-text
+    >
+  </mj-column>
+</mj-section>

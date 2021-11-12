@@ -19,10 +19,10 @@ describe('Sendgrid', () => {
 
     await sendgrid.send({
       to: 'elrumordelaluz@me.com',
-      subject: 'This is a Lorem Ipsum email',
-      text: 'Lorem ipsum',
+      subject: 'This is an email sent using Sendgrid',
+      text: 'Sendgrid Lorem ipsum',
       params({ hello, world }: any) {
-        return { message: `Lorem ipsum. ${hello}${world}` }
+        return { message: `Sendgrid Lorem ipsum. ${hello}${world}` }
       },
     })
 
@@ -59,10 +59,10 @@ describe('Gmail', () => {
 
     await gmail.send({
       to: 'elrumordelaluz@me.com',
-      subject: 'This is a Lorem Ipsum email',
-      text: 'Lorem ipsum',
+      subject: 'This is an email sent using Gmail',
+      text: 'Gmail Lorem ipsum',
       params({ hello, world }: any) {
-        return { message: `Lorem ipsum. ${hello}${world}` }
+        return { message: `Gmail Lorem ipsum. ${hello}${world}` }
       },
     })
 
