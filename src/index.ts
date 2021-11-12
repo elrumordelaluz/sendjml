@@ -1,6 +1,8 @@
 import { promises as fs } from 'fs'
 import { resolve, join } from 'path'
 import sgMail from '@sendgrid/mail'
+import nodemailer, { Transporter } from 'nodemailer'
+import { google } from 'googleapis'
 import { compile } from 'handlebars'
 import mjml2html from 'mjml'
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail'
@@ -8,8 +10,32 @@ import { MailDataRequired } from '@sendgrid/helpers/classes/mail'
 let globalTemplates: string | null = null
 let globalFrom: fromType | null = null
 let globalParams: {} | null = null
+let transporter: Transporter
 
-export const config = ({ apiKey, from, templates, params }: optionsType) => {
+type configOptions = {
+  templates?: string
+  params?: {}
+}
+
+type sendgridConfigOptions = configOptions & {
+  apiKey?: string
+  from?: fromType
+}
+
+type gmailConfigOptions = configOptions & {
+  oauthClientId?: string
+  oauthClientSecret?: string
+  oauthRefreshToken?: string
+  gmailUser?: string
+  from?: fromType
+}
+
+const configSendgrid = ({
+  apiKey,
+  from,
+  templates,
+  params,
+}: sendgridConfigOptions) => {
   if (apiKey) {
     sgMail.setApiKey(apiKey)
 
@@ -27,11 +53,47 @@ export const config = ({ apiKey, from, templates, params }: optionsType) => {
   }
 }
 
-type optionsType = {
-  apiKey?: string
-  from?: fromType
-  templates?: string
-  params?: {}
+// https://www.freecodecamp.org/news/use-nodemailer-to-send-emails-from-your-node-js-server/
+const configGmail = async ({
+  oauthClientId,
+  oauthClientSecret,
+  oauthRefreshToken,
+  gmailUser,
+  templates,
+  params,
+}: gmailConfigOptions) => {
+  if (oauthClientId && oauthClientSecret && oauthRefreshToken && gmailUser) {
+    const oAuth2Client = new google.auth.OAuth2(
+      oauthClientId,
+      oauthClientSecret,
+      'https://developers.google.com/oauthplayground'
+    )
+
+    oAuth2Client.setCredentials({
+      refresh_token: oauthRefreshToken,
+    })
+    const accessToken = await oAuth2Client.getAccessToken()
+    transporter = nodemailer.createTransport({
+      // @ts-ignore
+      service: 'gmail',
+      auth: {
+        type: 'OAuth2',
+        user: gmailUser,
+        clientId: oauthClientId,
+        clientSecret: oauthClientSecret,
+        refreshToken: oauthRefreshToken,
+        accessToken: accessToken,
+      },
+    })
+    if (templates) {
+      globalTemplates = templates
+    }
+    if (params) {
+      globalParams = params
+    }
+  } else {
+    throw new Error('Gmail OAuth keys missing')
+  }
 }
 
 export const designEmail = async ({
@@ -63,12 +125,12 @@ export const designEmail = async ({
 
 // export const getHtml = async ({templates, design, params} :getHtmlType):Boolean => ()
 
-export const send = async ({
+const sendgridSend = async ({
   templates,
   design,
   params,
   ...mailData
-}: sendType): Promise<any> => {
+}: sendgridSendOptions): Promise<any> => {
   try {
     let html = mailData.html || ''
 
@@ -92,12 +154,57 @@ export const send = async ({
   }
 }
 
-type sendType = Omit<MailDataRequired, 'from'> & {
+const gmailSend = async ({
+  templates,
+  design,
+  params,
+  ...mailData
+}: gmailSendOptions): Promise<any> => {
+  try {
+    let html = mailData.html || ''
+
+    html = await designEmail({ templates, design, params })
+
+    const { from, ...restMailData } = mailData
+
+    if (transporter) {
+      if (transporter) {
+        await transporter.sendMail({
+          html,
+          to: '',
+          from: '',
+          ...restMailData,
+        })
+      }
+
+      return true
+    } else {
+      throw new Error('Missing transporter')
+    }
+  } catch (err) {
+    console.log({ err })
+    return false
+  }
+}
+
+type sendgridSendOptions = Omit<MailDataRequired, 'from'> & {
+  to?: string
   from?: fromType
   text?: string
   design?: string
   templates?: string
   params?: any
+}
+
+type gmailSendOptions = {
+  to?: string
+  from?: fromType
+  text?: string
+  design?: string
+  templates?: string
+  params?: any
+  html?: string
+  subject?: string
 }
 
 type designType = {
@@ -107,3 +214,6 @@ type designType = {
 }
 
 type fromType = string | { name?: string; email: string }
+
+export const gmail = { config: configGmail, send: gmailSend }
+export const sendgrid = { config: configSendgrid, send: sendgridSend }
