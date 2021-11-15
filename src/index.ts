@@ -1,8 +1,9 @@
 import { promises as fs } from 'fs'
 import { resolve, join } from 'path'
-import sgMail from '@sendgrid/mail'
-import nodemailer, { Transporter } from 'nodemailer'
-import { google } from 'googleapis'
+// import sgMail from '@sendgrid/mail'
+import { Transporter } from 'nodemailer'
+// import nodemailer, { Transporter } from 'nodemailer'
+// import { google } from 'googleapis'
 import { compile } from 'handlebars'
 import mjml2html from 'mjml'
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail'
@@ -11,6 +12,7 @@ let globalTemplates: string | null = null
 let globalFrom: fromType | null = null
 let globalParams: {} | null = null
 let transporter: Transporter
+let sendgridter: any
 
 type configOptions = {
   templates?: string
@@ -37,7 +39,8 @@ const configSendgrid = ({
   params,
 }: sendgridConfigOptions) => {
   if (apiKey) {
-    sgMail.setApiKey(apiKey)
+    sendgridter = require('@sendgrid/mail')
+    sendgridter.setApiKey(apiKey)
 
     if (from) {
       globalFrom = from
@@ -63,6 +66,8 @@ const configGmail = async ({
   params,
 }: gmailConfigOptions) => {
   if (oauthClientId && oauthClientSecret && oauthRefreshToken && gmailUser) {
+    const nodemailer = require('nodemailer')
+    const { google } = require('googleapis')
     const oAuth2Client = new google.auth.OAuth2(
       oauthClientId,
       oauthClientSecret,
@@ -138,8 +143,8 @@ const sendgridSend = async ({
 
     const { from, ...restMailData } = mailData
     const sender = from || globalFrom
-    if (sender) {
-      await sgMail.send({
+    if (sender && sendgridter) {
+      await sendgridter.send({
         from: sender,
         html,
         ...restMailData,
