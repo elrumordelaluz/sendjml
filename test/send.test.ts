@@ -3,13 +3,13 @@ import {
   gmail,
   // designEmail
 } from '../src'
-// import { promises as fs } from 'fs'
+import { promises as fs, createReadStream } from 'fs'
 
 describe('Sendgrid', () => {
   it('works', async done => {
     sendgrid.config({
       apiKey: process.env.SG_API_KEY,
-      from: 'contact@lionel.com',
+      from: { name: 'Lionel T.', email: 'contact@lionel.com' },
       templates: `${__dirname}/design`,
       params: {
         hello: 'Hello, ',
@@ -17,13 +17,23 @@ describe('Sendgrid', () => {
       },
     })
 
+    const attachment = await fs.readFile(`${__dirname}/test.pdf`)
     await sendgrid.send({
+      from: 'Pixeden <info@pixeden.com>',
       to: 'elrumordelaluz@me.com',
       subject: 'This is an email sent using Sendgrid',
       text: 'Sendgrid Lorem ipsum',
       params({ hello, world }: any) {
         return { message: `Sendgrid Lorem ipsum. ${hello}${world}` }
       },
+      attachments: [
+        {
+          content: attachment.toString('base64'),
+          filename: 'attachment.pdf',
+          type: 'application/pdf',
+          disposition: 'attachment',
+        },
+      ],
     })
 
     // const html = await designEmail({ design: 'seed' })
@@ -57,6 +67,7 @@ describe('Gmail', () => {
       },
     })
 
+    const attachment = createReadStream(`${__dirname}/test.pdf`)
     await gmail.send({
       to: 'elrumordelaluz@me.com',
       subject: 'This is an email sent using Gmail',
@@ -64,6 +75,15 @@ describe('Gmail', () => {
       params({ hello, world }: any) {
         return { message: `Gmail Lorem ipsum. ${hello}${world}` }
       },
+      // ref: https://nodemailer.com/message/attachments/
+      attachments: [
+        {
+          content: attachment,
+          filename: 'attachment.pdf',
+          contentType: 'application/pdf',
+          contentDisposition: 'attachment',
+        },
+      ],
     })
 
     expect(true).toBe(true)

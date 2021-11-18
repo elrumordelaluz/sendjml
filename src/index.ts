@@ -1,9 +1,6 @@
 import { promises as fs } from 'fs'
 import { resolve, join } from 'path'
-// import sgMail from '@sendgrid/mail'
 import { Transporter } from 'nodemailer'
-// import nodemailer, { Transporter } from 'nodemailer'
-// import { google } from 'googleapis'
 import { compile } from 'handlebars'
 import mjml2html from 'mjml'
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail'
@@ -202,14 +199,17 @@ type sendgridSendOptions = Omit<MailDataRequired, 'from'> & {
 }
 
 type gmailSendOptions = {
-  to?: string
-  from?: fromType
+  from?: string | { name?: string; address: string }
+  to?: string | [string]
+  cc?: string | [string]
+  bcc?: string | [string]
+  subject?: string
   text?: string
+  html?: string
   design?: string
   templates?: string
   params?: any
-  html?: string
-  subject?: string
+  attachments?: [any]
 }
 
 type designType = {
