@@ -69,6 +69,7 @@ describe('Gmail', () => {
 
     const attachment = createReadStream(`${__dirname}/test.pdf`)
     await gmail.send({
+      from: `Pixeden <${process.env.MAIL_USERNAME}>`,
       to: 'elrumordelaluz@me.com',
       subject: 'This is an email sent using Gmail',
       text: 'Gmail Lorem ipsum',
