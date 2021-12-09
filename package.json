@@ -44,23 +44,23 @@
     ]
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "5.0.3",
+    "@sendgrid/helpers": "7.6.0",
+    "@sendgrid/mail": "7.6.0",
+    "@size-limit/preset-small-lib": "7.0.3",
     "@types/mjml": "4.7.0",
     "dotenv": "10.0.0",
-    "husky": "7.0.2",
-    "size-limit": "5.0.3",
+    "googleapis": "92.0.0",
+    "husky": "7.0.4",
+    "nodemailer": "6.7.2",
+    "size-limit": "7.0.4",
     "tsdx": "0.14.1",
     "tslib": "2.3.1",
-    "typescript": "4.4.3",
-    "@sendgrid/helpers": "7.4.6",
-    "@sendgrid/mail": "7.4.6",
-    "googleapis": "91.0.0",
-    "nodemailer": "6.7.0"
+    "typescript": "4.5.2"
   },
   "dependencies": {
     "@types/nodemailer": "6.4.4",
     "handlebars": "4.7.7",
-    "mjml": "4.10.3"
+    "mjml": "4.11.0"
   },
   "peerDependencies": {
     "@sendgrid/helpers": "7.4.6",
