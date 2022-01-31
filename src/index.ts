@@ -133,26 +133,21 @@ const sendgridSend = async ({
   params,
   ...mailData
 }: sendgridSendOptions): Promise<any> => {
-  try {
-    let html = mailData.html || ''
+  let html = mailData.html || ''
 
-    html = await designEmail({ templates, design, params })
+  html = await designEmail({ templates, design, params })
 
-    const { from, ...restMailData } = mailData
-    const sender = from || globalFrom
-    if (sender && sendgridter) {
-      await sendgridter.send({
-        from: sender,
-        html,
-        ...restMailData,
-      })
-      return true
-    } else {
-      throw new Error('Missing sender')
-    }
-  } catch (err) {
-    console.log({ err })
-    return false
+  const { from, ...restMailData } = mailData
+  const sender = from || globalFrom
+  if (sender && sendgridter) {
+    await sendgridter.send({
+      from: sender,
+      html,
+      ...restMailData,
+    })
+    return true
+  } else {
+    throw new Error('Missing sender')
   }
 }
 
