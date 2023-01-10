@@ -1,0 +1,28 @@
+<mjml>
+  <mj-include path="head.mjml" />
+  <mj-body>
+    <mj-section background-color="#f5f6f9">
+      <mj-column width="600px">
+        <mj-image
+          width="50px"
+          src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+          href="https://www.google.com"
+        />
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#fff">
+      <mj-column>
+        <mj-text>{{message}}</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#f5f6f9">
+      <mj-column>
+        <mj-text font-size="12px" color="#828282" align="center"
+          >This e-mail was sent by
+          <a href="https://www.google.com" class="link-nostyle">Google.com</a>,
+          USA</mj-text
+        >
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

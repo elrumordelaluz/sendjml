@@ -29,6 +29,14 @@ type gmailConfigOptions = configOptions & {
   from?: fromType
 }
 
+type smtpConfigOptions = configOptions & {
+  host?: string
+  secure?: boolean
+  port?: string
+  user?: string
+  pass?: string
+}
+
 const configSendgrid = ({
   apiKey,
   from,
@@ -98,6 +106,38 @@ const configGmail = async ({
   }
 }
 
+const configSmtp = async ({
+  host,
+  secure = true,
+  port = '465',
+  user,
+  pass,
+  templates,
+  params,
+}: smtpConfigOptions) => {
+  if (user && pass && host) {
+    const nodemailer = require('nodemailer')
+
+    transporter = nodemailer.createTransport({
+      host,
+      port: port,
+      secure,
+      auth: {
+        user,
+        pass,
+      },
+    })
+    if (templates) {
+      globalTemplates = templates
+    }
+    if (params) {
+      globalParams = params
+    }
+  } else {
+    throw new Error('Smtp user, pass and host needed')
+  }
+}
+
 export const designEmail = async ({
   templates,
   design,
@@ -155,6 +195,7 @@ const gmailSend = async ({
   templates,
   design,
   params,
+  from,
   ...mailData
 }: gmailSendOptions): Promise<any> => {
   try {
@@ -162,17 +203,12 @@ const gmailSend = async ({
 
     html = await designEmail({ templates, design, params })
 
-    const { from, ...restMailData } = mailData
-
     if (transporter) {
-      if (transporter) {
-        await transporter.sendMail({
-          html,
-          to: '',
-          from: '',
-          ...restMailData,
-        })
-      }
+      await transporter.sendMail({
+        html,
+        from,
+        ...mailData,
+      })
 
       return true
     } else {
@@ -194,7 +230,7 @@ type sendgridSendOptions = Omit<MailDataRequired, 'from'> & {
 }
 
 type gmailSendOptions = {
-  from?: string | { name?: string; address: string }
+  from: string | { name: string; address: string }
   to?: string | [string]
   cc?: string | [string]
   bcc?: string | [string]
@@ -216,4 +252,5 @@ type designType = {
 type fromType = string | { name?: string; email: string }
 
 export const gmail = { config: configGmail, send: gmailSend }
+export const smtp = { config: configSmtp, send: gmailSend }
 export const sendgrid = { config: configSendgrid, send: sendgridSend }
