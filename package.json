@@ -63,16 +63,22 @@
     "mjml": "4.13.0"
   },
   "peerDependencies": {
-    "@sendgrid/helpers": "7.4.6",
-    "@sendgrid/mail": "7.4.6",
-    "googleapis": "91.0.0",
-    "nodemailer": "6.7.0"
+    "@sendgrid/helpers": ">=7",
+    "@sendgrid/mail": ">=7",
+    "googleapis": ">=91",
+    "nodemailer": ">=6"
   },
   "peerDependenciesMeta": {
     "@sendgrid/mail": {
       "optional": true
     },
+    "@sendgrid/helpers": {
+      "optional": true
+    },
     "nodemailer": {
+      "optional": true
+    },
+    "googleapis": {
       "optional": true
     }
   }
