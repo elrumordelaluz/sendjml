@@ -16,12 +16,12 @@ type configOptions = {
   params?: {}
 }
 
-type sendgridConfigOptions = configOptions & {
+export type sendgridConfigOptions = configOptions & {
   apiKey?: string
   from?: fromType
 }
 
-type gmailConfigOptions = configOptions & {
+export type gmailConfigOptions = configOptions & {
   oauthClientId?: string
   oauthClientSecret?: string
   oauthRefreshToken?: string
@@ -29,7 +29,7 @@ type gmailConfigOptions = configOptions & {
   from?: fromType
 }
 
-type smtpConfigOptions = configOptions & {
+export type smtpConfigOptions = configOptions & {
   host?: string
   secure?: boolean
   port?: string
@@ -220,7 +220,7 @@ const gmailSend = async ({
   }
 }
 
-type sendgridSendOptions = Omit<MailDataRequired, 'from'> & {
+export type sendgridSendOptions = Omit<MailDataRequired, 'from'> & {
   to?: string
   from?: fromType
   text?: string
@@ -229,7 +229,7 @@ type sendgridSendOptions = Omit<MailDataRequired, 'from'> & {
   params?: any
 }
 
-type gmailSendOptions = {
+export type gmailSendOptions = {
   from: string | { name: string; address: string }
   to?: string | [string]
   cc?: string | [string]
@@ -243,7 +243,7 @@ type gmailSendOptions = {
   attachments?: [any]
 }
 
-type designType = {
+export type designType = {
   design?: string
   templates?: string
   params?: any
